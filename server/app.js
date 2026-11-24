@@ -12,10 +12,13 @@ app.get('/api/events', (req, res) => {
 
 app.post('/api/events/:id/rsvp', (req, res) => {
   const id = req.params.id;
-  const event = events.find((e) => e.id === id);
+  const event = events.find((e) => e.id === Number(id));
 
   if (!event) {
     return res.status(404).json({ error: 'Event not found' });
+  }
+  if(event.capacity===event.attendees){
+    return res.status(409).json({error:"Event is full"})
   }
 
   event.attendees = event.attendees + 1;
